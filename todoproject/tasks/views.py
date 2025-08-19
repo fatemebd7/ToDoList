@@ -4,12 +4,26 @@ from django.contrib.auth.decorators import login_required
 from tasks.forms import TaskForm
 from django.http import JsonResponse
 from django.utils import timezone
+from datetime import date
 
 @login_required
 def kanban_board(request):
     tasks = Task.objects.filter(user=request.user)
-    pending = tasks.filter(completed=False)
-    done = tasks.filter(completed=True)
+    pending = []
+    done = []
+
+    for task in tasks:
+        # محاسبه روزهای باقی‌مانده
+        if task.due_date:
+            task.days_left = (task.due_date - date.today()).days
+        else:
+            task.days_left = None
+
+        if task.completed:
+            done.append(task)
+        else:
+            pending.append(task)
+
     return render(request, "tasks/kanban.html", {
         'pending': pending,
         'done': done,
