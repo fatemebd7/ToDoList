@@ -1,40 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="mb-4 text-center">Dashboard</h1>
-
-<div class="row mb-4">
-    <!-- Total Tasks -->
-    <div class="col-md-4 mb-3">
-        <div class="card text-center bg-primary text-white shadow">
-            <div class="card-body">
-                <h5 class="card-title">Total Tasks</h5>
-                <p class="card-text display-5">{{ total }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Done -->
-    <div class="col-md-4 mb-3">
-        <div class="card text-center bg-success text-white shadow">
-            <div class="card-body">
-                <h5 class="card-title">Done</h5>
-                <p class="card-text display-5">{{ done }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pending -->
-    <div class="col-md-4 mb-3">
-        <div class="card text-center bg-warning text-dark shadow">
-            <div class="card-body">
-                <h5 class="card-title">Pending</h5>
-                <p class="card-text display-5">{{ pending }}</p>
-            </div>
-        </div>
-    </div>
+<h1>Dashboard</h1>
+<div class="row">
+<div class="col-md-4"><div class="card text-center p-3 mb-3 bg-primary text-white">Total Tasks: {{ total }}</div></div>
+<div class="col-md-4"><div class="card text-center p-3 mb-3 bg-success text-white">Done: {{ done }}</div></div>
+<div class="col-md-4"><div class="card text-center p-3 mb-3 bg-warning text-dark">Pending: {{ pending }}</div></div>
 </div>
-
-<div class="text-center">
-    <a href="{% url 'task_list' %}" class="btn btn-outline-primary btn-lg">Back to Tasks</a>
-</div>
+<a href="{% url 'task_list' %}" class="btn btn-outline-primary">Back to Tasks</a>
 {% endblock %}
