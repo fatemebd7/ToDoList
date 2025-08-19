@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import task_list, task_create, task_toggle, task_delete, dashboard
+from .views import task_list, task_create, task_toggle, task_delete , kanban_board ,update_task_status , dashboard
 from rest_framework.routers import DefaultRouter
 from .api_views import TaskViewSet, CategoryViewSet
 
@@ -13,5 +13,7 @@ urlpatterns = [
     path("toggle/<int:pk>/", task_toggle, name="task_toggle"),
     path("delete/<int:pk>/", task_delete, name="task_delete"),
     path("dashboard/", dashboard, name="dashboard"),
+    path('kanban/', kanban_board, name='kanban_board'),
+    path('update-status/',update_task_status, name='update_task_status'),
     path("api/", include(router.urls)),
 ]

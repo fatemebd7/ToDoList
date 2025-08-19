@@ -1,17 +1,49 @@
 from django.shortcuts import render, redirect
 from tasks.models import Task
 from django.contrib.auth.decorators import login_required
-from django import forms
+from tasks.forms import TaskForm
+from django.http import JsonResponse
+from django.utils import timezone
 
-class TaskForm(forms.ModelForm):
-    class Meta:
-        model = Task
-        fields = ["title", "description", "due_date", "priority", "category"]
+@login_required
+def kanban_board(request):
+    tasks = Task.objects.filter(user=request.user)
+    pending = tasks.filter(completed=False)
+    done = tasks.filter(completed=True)
+    return render(request, "tasks/kanban.html", {
+        'pending': pending,
+        'done': done,
+    })
+
+@login_required
+def update_task_status(request):
+    if request.method == "POST":
+        task_id = request.POST.get("task_id")
+        status = request.POST.get("status")  # 'pending' یا 'done'
+        task = Task.objects.get(id=task_id, user=request.user)
+        task.completed = True if status == "done" else False
+        task.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False})
+
+
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.filter(user=request.user).order_by("completed", "due_date")
-    return render(request, "tasks/task_list.html", {"tasks": tasks})
+    sort = request.GET.get('sort', 'due_date')  
+    direction = request.GET.get('dir', 'asc')  
+    order = sort if direction == 'asc' else f"-{sort}"
+    tasks = Task.objects.filter(user=request.user).order_by(order)
+
+    # محاسبه روز باقی‌مانده
+    for task in tasks:
+        if task.due_date:
+            delta = task.due_date - timezone.now().date()
+            task.days_left = delta.days
+        else:
+            task.days_left = None
+
+    return render(request, "tasks/task_list.html", {"tasks": tasks, "sort": sort, "dir": direction})
 
 @login_required
 def task_create(request):
