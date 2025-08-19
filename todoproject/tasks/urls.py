@@ -1,7 +1,7 @@
 from django.urls import path, include
-from tasks.views import task_list, task_create, task_toggle, task_delete, dashboard
+from .views import task_list, task_create, task_toggle, task_delete, dashboard
 from rest_framework.routers import DefaultRouter
-from tasks.api_views import TaskViewSet, CategoryViewSet
+from .api_views import TaskViewSet, CategoryViewSet
 
 router = DefaultRouter()
 router.register(r"tasks", TaskViewSet, basename="task")
