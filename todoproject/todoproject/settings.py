@@ -103,3 +103,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# dpg-d2kum9buibrs73emaj70-a
+# in:postgresql://todolist_db_zbco_user:CDI42LmHiVJjHt6qeAs2X7DgdFXc5pW8@dpg-d2kum9buibrs73emaj70-a/todolist_db_zbco
