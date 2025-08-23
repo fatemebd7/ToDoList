@@ -1,13 +1,19 @@
 from pathlib import Path
 import os
+import dj_database_url
+
 
 # مسیر پایه پروژه
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # امنیت
-SECRET_KEY = 'django-insecure-)1=dmv_wabqhcp@3*f@#c4*o!q2q)be1s4%ocx()mtd$%&oyy$'
-DEBUG = True
-ALLOWED_HOSTS = []
+# SECRET_KEY = 'django-insecure-)1=dmv_wabqhcp@3*f@#c4*o!q2q)be1s4%ocx()mtd$%&oyy$'
+
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret")
+
+DEBUG = False
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]  # بعدا میتونی محدودش کنی به آدرس رندر
 
 # اپ‌ها
 INSTALLED_APPS = [
@@ -26,6 +32,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # اضافه شد
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,12 +64,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'todoproject.wsgi.application'
 
 # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
+
 
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -79,9 +91,15 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
